@@ -141,8 +141,7 @@ impl S {
         let addr: usize = addr
             .try_into()
             .with_context(|| format!("invalid address conversion: {addr}"))?;
-        self
-            .memory
+        self.memory
             .get(addr)
             .with_context(|| format!("could not read addr {addr}"))
             .map(|x| *x)

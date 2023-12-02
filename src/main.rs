@@ -135,11 +135,20 @@ fn main() -> anyhow::Result<()> {
                         Ok(Ok(solution)) => {
                             let _ = std::hint::black_box(solution);
                         }
-                        Ok(Err(e)) => { println!("Puzzle {puzzle} encountered an error: {e:?}"); break },
-                        Err(_) => { println!("Puzzle {puzzle} panicked"); break },
+                        Ok(Err(e)) => {
+                            println!("Puzzle {puzzle} encountered an error: {e:?}");
+                            break;
+                        }
+                        Err(_) => {
+                            println!("Puzzle {puzzle} panicked");
+                            break;
+                        }
                     }
                 }
-                println!("Puzzle {puzzle} takes {:05.4} ms per invocation", start.elapsed().as_secs_f64() * 1000.0 / (arg.bench_loops() as f64));
+                println!(
+                    "Puzzle {puzzle} takes {:05.4} ms per invocation",
+                    start.elapsed().as_secs_f64() * 1000.0 / (arg.bench_loops() as f64)
+                );
             }
             println!("DONE");
         }
