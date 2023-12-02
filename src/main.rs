@@ -115,19 +115,13 @@ fn main() -> anyhow::Result<()> {
         }
         Action::Benchmark => {
             for puzzle in get_puzzles(arg.puzzle) {
+                use anyhow::Context;
+                let input = arg
+                .get_input(puzzle.year(), puzzle.day())
+                .context("puzzle input gathering")?;
                 let start = std::time::Instant::now();
                 for _ in 0..arg.bench_loops() {
-                    let progress =
-                        arg.get_day_progress(puzzle.year(), puzzle.day(), puzzle.part())?;
-                    if progress.status() == PartStatus::Completed {
-                        // skip days we finished
-                        continue;
-                    }
                     let output = catch_unwind(|| -> anyhow::Result<String> {
-                        use anyhow::Context;
-                        let input = arg
-                            .get_input(puzzle.year(), puzzle.day())
-                            .context("puzzle input gathering")?;
                         let solution = puzzle.call(&input, None).context("puzzle call")?;
                         Ok(solution)
                     });
