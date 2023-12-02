@@ -146,8 +146,8 @@ fn main() -> anyhow::Result<()> {
                     }
                 }
                 println!(
-                    "Puzzle {puzzle} takes {:05.4} ms per invocation",
-                    start.elapsed().as_secs_f64() * 1000.0 / (arg.bench_loops() as f64)
+                    "Puzzle {puzzle} takes {:05.4} µs per invocation",
+                    start.elapsed().as_secs_f64() * 1_000_000.0 / (arg.bench_loops() as f64)
                 );
             }
             println!("DONE");
