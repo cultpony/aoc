@@ -1,6 +1,7 @@
 #![feature(never_type)]
 #![feature(const_trait_impl)]
 #![feature(associated_type_defaults)]
+#![feature(let_chains)]
 
 pub mod aoc;
 mod util;
