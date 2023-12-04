@@ -118,8 +118,8 @@ fn main() -> anyhow::Result<()> {
             for puzzle in get_puzzles(arg.puzzle) {
                 use anyhow::Context;
                 let input = arg
-                .get_input(puzzle.year(), puzzle.day())
-                .context("puzzle input gathering")?;
+                    .get_input(puzzle.year(), puzzle.day())
+                    .context("puzzle input gathering")?;
                 let start = std::time::Instant::now();
                 for _ in 0..arg.bench_loops() {
                     let output = catch_unwind(|| -> anyhow::Result<String> {
@@ -141,8 +141,8 @@ fn main() -> anyhow::Result<()> {
                     }
                 }
                 println!(
-                    "Puzzle {puzzle} takes {:05.4} µs per invocation",
-                    start.elapsed().as_secs_f64() * 1_000_000.0 / (arg.bench_loops() as f64)
+                    "Puzzle {puzzle} takes {:05.4} ns per invocation",
+                    start.elapsed().as_secs_f64() * 1_000_000_000.0 / (arg.bench_loops() as f64)
                 );
             }
             println!("DONE");

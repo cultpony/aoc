@@ -124,7 +124,9 @@ impl Blueprint {
                     BlueprintItem::NumberPlaceholder => {
                         let x = if let (_, BlueprintItem::Number(x)) = self.get_at(row, col) {
                             x
-                        } else { continue };
+                        } else {
+                            continue;
+                        };
                         let nbs = self.get_nb(row, col);
                         let has_symbol = nbs
                             .into_iter()
@@ -163,32 +165,40 @@ impl Blueprint {
     }
     fn get_gear_ratio(&self, row: usize, col: usize) -> Option<usize> {
         let nbs = self.get_nb(row, col);
-        let ratios: Vec<BlueprintItem> = nbs.into_iter().filter_map(|(row, col)| if let ((tcol, trow), BlueprintItem::MarkedNumber(x)) = self.get_at(row, col) {
-            Some(((tcol, trow), BlueprintItem::MarkedNumber(x)))
-        } else { None })
-            .dedup_by(|((trowa, tcola), _), ((trowb, tcolb), _)| {
-                tcola == tcolb && trowa == trowb
+        let ratios: Vec<BlueprintItem> = nbs
+            .into_iter()
+            .filter_map(|(row, col)| {
+                if let ((tcol, trow), BlueprintItem::MarkedNumber(x)) = self.get_at(row, col) {
+                    Some(((tcol, trow), BlueprintItem::MarkedNumber(x)))
+                } else {
+                    None
+                }
             })
+            .dedup_by(|((trowa, tcola), _), ((trowb, tcolb), _)| tcola == tcolb && trowa == trowb)
             .map(|(_, m)| m)
             .collect();
         if ratios.len() != 2 {
-            return None
+            return None;
         }
-        Some(ratios.into_iter().fold(1, |acc, x| if let BlueprintItem::MarkedNumber(x) = x {
-            acc * x
-        } else { unreachable!() }))
+        Some(ratios.into_iter().fold(1, |acc, x| {
+            if let BlueprintItem::MarkedNumber(x) = x {
+                acc * x
+            } else {
+                unreachable!()
+            }
+        }))
     }
     fn get_gear_ratio_sums(&self) -> usize {
         let mut out = 0;
         for (row, col) in self.get_gear_pos() {
-            if let Some(sum) = self.get_gear_ratio(row, col){
+            if let Some(sum) = self.get_gear_ratio(row, col) {
                 out += sum;
             }
         }
         out
     }
     pub fn get_nb(&self, row: usize, col: usize) -> Vec<(usize, usize)> {
-        let mut nbs =  Vec::new();
+        let mut nbs = Vec::new();
         let can_up = row > 0;
         let can_down = row < self.data.nrows() - 1;
         let can_left = col > 0;
@@ -244,7 +254,12 @@ impl Blueprint {
         old_data
     }
 
-    pub fn set_at_indirect(&mut self, row: usize, mut col: usize, data: BlueprintItem) -> BlueprintItem {
+    pub fn set_at_indirect(
+        &mut self,
+        row: usize,
+        mut col: usize,
+        data: BlueprintItem,
+    ) -> BlueprintItem {
         loop {
             let data_n = self.data.row(row)[col];
             match data_n {
@@ -253,8 +268,8 @@ impl Blueprint {
                 }
                 v => {
                     self.data.row_mut(row)[col] = data;
-                    return v
-                },
+                    return v;
+                }
             }
         }
     }
